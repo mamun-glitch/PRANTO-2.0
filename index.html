@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome To Calendar Tracker</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 600px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 1s ease-in-out;
+            display: none;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 15px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            animation: slideIn 0.8s ease-in-out;
+        }
+
+        video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+        }
+
+        .intro {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 30px;
+            color: white;
+            font-weight: bold;
+            animation: fadeOut 3s forwards;
+        }
+
+        @keyframes fadeOut {
+            0% { opacity: 1; }
+            100% { opacity: 0; visibility: hidden; }
+        }
+    </style>
+</head>
+<body>
+    <video autoplay loop muted>
+        <source src="https://player.vimeo.com/external/408705514.sd.mp4?s=3349bbdb5cc06c038a5a3213074082828654a56c&profile_id=164&oauth2_token_id=57447761" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    <div class="intro" id="intro">Welcome To Calendar Tracker</div>
+    <div class="container" id="mainContent">
+        <h2 id='resultTitle'>Welcome To Calendar Tracker</h2>
+        <label for="month">Month:</label>
+        <select id="month"></select>
+        <label for="year">Year:</label>
+        <input type="number" id="year" min="1">
+        <button onclick="generateCalendar()">Generate</button>
+        <div id="calendar"></div>
+    </div>
+
+    <script>
+        function isLeapYear(year) {
+            return (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
+        }
+
+        function getDaysInMonth(month, year) {
+            const days = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+            return month === 1 && isLeapYear(year) ? 29 : days[month];
+        }
+
+        function generateCalendar() {
+            document.getElementById("resultTitle").innerText = "Your Expectation Calendar Is";
+            document.getElementById("mainContent").style.display = "block";
+            const month = parseInt(document.getElementById("month").value);
+            const year = parseInt(document.getElementById("year").value);
+            const daysInMonth = getDaysInMonth(month, year);
+            const firstDay = new Date(year, month, 1).getDay();
+            
+            const today = new Date();
+            const isCurrentMonth = today.getFullYear() === year && today.getMonth() === month;
+            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            
+            let calendarHTML = `<h3>${monthNames[month]} ${year}</h3>`;
+            calendarHTML += `<table><tr><th>Sun</th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th></tr><tr>`;
+            
+            for (let i = 0; i < firstDay; i++) {
+                calendarHTML += "<td></td>";
+            }
+            
+            for (let day = 1; day <= daysInMonth; day++) {
+                const isToday = isCurrentMonth && day === today.getDate();
+                calendarHTML += `<td class="${isToday ? 'today' : ''}">${day}</td>`;
+                
+                if ((firstDay + day) % 7 === 0) {
+                    calendarHTML += "</tr><tr>";
+                }
+            }
+            
+            calendarHTML += "</tr></table>";
+            document.getElementById("calendar").innerHTML = calendarHTML;
+        }
+
+        window.onload = function() {
+            setTimeout(() => {
+                document.getElementById("intro").style.display = "none";
+                document.getElementById("mainContent").style.display = "block";
+            }, 3000);
+            
+            const monthSelect = document.getElementById("month");
+            const yearInput = document.getElementById("year");
+            const currentYear = new Date().getFullYear();
+            
+            ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"].forEach((m, i) => {
+                let option = new Option(m, i);
+                monthSelect.add(option);
+            });
+            
+            monthSelect.value = new Date().getMonth();
+            yearInput.value = currentYear;
+        }
+    </script>
+    <div style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); font-size: 20px; font-weight: bold; color: white; text-shadow: 2px 2px 5px rgba(255, 0, 0, 0.8); animation: flameEffect 1.5s infinite alternate;">
+        🔥 Made by Sarder Jamil Al Mamun 🔥
+    </div>
+
+    <style>
+        @keyframes flameEffect {
+            0% { text-shadow: 2px 2px 5px rgba(255, 0, 0, 0.8); }
+            50% { text-shadow: 2px 2px 20px rgba(255, 165, 0, 1); }
+            100% { text-shadow: 2px 2px 5px rgba(255, 0, 0, 0.8); }
+        }
+    </style>
+</body>
+</html>
